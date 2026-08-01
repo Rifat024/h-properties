@@ -33,13 +33,17 @@
         </span>
       </div>
       <h2 style="text-align:center">অ্যাডমিন লগইন</h2>
+      <div class="field" id="emailField" hidden>
+        <label>ইমেইল / Email</label>
+        <input type="email" id="email" placeholder="admin@example.com" autocomplete="username" />
+      </div>
       <div class="field">
         <label>পাসওয়ার্ড / Password</label>
-        <input type="password" id="pw" placeholder="••••••••" />
+        <input type="password" id="pw" placeholder="••••••••" autocomplete="current-password" />
       </div>
       <button class="btn btn--gold btn--block" id="loginBtn">লগইন / Login</button>
-      <div class="admin-msg err" id="loginErr">ভুল পাসওয়ার্ড / Wrong password</div>
-      <p class="admin-hint">শুধুমাত্র অনুমোদিত ব্যবহারকারীর জন্য। পাসওয়ার্ড পরিবর্তন করতে <code>admin.js</code> ফাইলের <code>ADMIN_PASSWORD</code> এডিট করুন।</p>
+      <div class="admin-msg err" id="loginErr">ভুল তথ্য / Invalid credentials</div>
+      <p class="admin-hint" id="loginHint">শুধুমাত্র অনুমোদিত ব্যবহারকারীর জন্য।</p>
     </div>
   </div>
 
@@ -108,6 +112,7 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script src="store.js"></script>
   <script src="admin.js"></script>
 </body>

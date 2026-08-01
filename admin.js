@@ -18,13 +18,22 @@
     });
   }
 
-  /* ---------- Login ---------- */
+  /* ---------- Login (Supabase auth OR local password) ---------- */
+  var supaMode = window.HPStore && window.HPStore.needsAuth;
   var loginView = document.getElementById("loginView");
   var dashView = document.getElementById("dashView");
+  var email = document.getElementById("email");
+  var emailField = document.getElementById("emailField");
   var pw = document.getElementById("pw");
   var loginBtn = document.getElementById("loginBtn");
   var loginErr = document.getElementById("loginErr");
+  var loginHint = document.getElementById("loginHint");
   var logoutBtn = document.getElementById("logoutBtn");
+
+  if (supaMode) {
+    emailField.hidden = false;
+    loginHint.textContent = "লাইভ ব্যাকএন্ড (Supabase) — আপনার ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।";
+  }
 
   function showDash() {
     loginView.hidden = true;
@@ -32,7 +41,7 @@
     var badge = document.getElementById("modeBadge");
     var warn = document.getElementById("storageWarn");
     if (window.HPStore && window.HPStore.mode !== "local") {
-      badge.textContent = "লাইভ ব্যাকএন্ড";
+      badge.textContent = "🌐 লাইভ ব্যাকএন্ড";
       warn.style.display = "none";
     } else {
       warn.classList.add("show");
@@ -41,22 +50,37 @@
   }
   function showLogin() { dashView.hidden = true; loginView.hidden = false; }
 
-  if (sessionStorage.getItem(SESSION_KEY) === "1") showDash();
+  function alreadyLoggedIn() {
+    return supaMode ? window.HPStore.isLoggedIn() : (sessionStorage.getItem(SESSION_KEY) === "1");
+  }
+  if (alreadyLoggedIn()) showDash();
 
   function tryLogin() {
-    if (pw.value === ADMIN_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, "1");
-      loginErr.classList.remove("show");
-      showDash();
+    loginErr.classList.remove("show");
+    if (supaMode) {
+      loginBtn.disabled = true; loginBtn.textContent = "লগইন হচ্ছে…";
+      window.HPStore.login(email.value.trim(), pw.value).then(function () {
+        loginBtn.disabled = false; loginBtn.textContent = "লগইন / Login";
+        pw.value = ""; showDash();
+      }).catch(function (err) {
+        loginBtn.disabled = false; loginBtn.textContent = "লগইন / Login";
+        loginErr.textContent = (err && err.message) ? err.message : "লগইন ব্যর্থ / Login failed";
+        loginErr.classList.add("show"); pw.value = "";
+      });
     } else {
-      loginErr.classList.add("show");
-      pw.value = "";
+      if (pw.value === ADMIN_PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, "1"); showDash();
+      } else {
+        loginErr.textContent = "ভুল পাসওয়ার্ড / Wrong password";
+        loginErr.classList.add("show"); pw.value = "";
+      }
     }
   }
   loginBtn.addEventListener("click", tryLogin);
   pw.addEventListener("keydown", function (e) { if (e.key === "Enter") tryLogin(); });
+  email.addEventListener("keydown", function (e) { if (e.key === "Enter") tryLogin(); });
   logoutBtn.addEventListener("click", function () {
-    sessionStorage.removeItem(SESSION_KEY);
+    if (supaMode) window.HPStore.logout(); else sessionStorage.removeItem(SESSION_KEY);
     showLogin();
   });
 
@@ -94,22 +118,30 @@
     });
   }
 
+  function setUploading(on) {
+    publishBtn.disabled = on;
+    publishBtn.textContent = on ? "আপলোড হচ্ছে… / Uploading…"
+      : (editingId ? "আপডেট করুন / Update" : "প্রকাশ করুন / Publish");
+  }
+
   postImageFile.addEventListener("change", function () {
     var files = Array.prototype.slice.call(postImageFile.files || []);
+    if (!files.length) return;
+    var maxMB = supaMode ? 5 : 1.6;
     var tooBig = false;
-    var readers = files.map(function (file) {
-      return new Promise(function (resolve) {
-        if (file.size > 1.6 * 1024 * 1024) { tooBig = true; return resolve(null); }
-        var reader = new FileReader();
-        reader.onload = function (e) { resolve(e.target.result); };
-        reader.readAsDataURL(file);
+    var valid = files.filter(function (f) { if (f.size > maxMB * 1024 * 1024) { tooBig = true; return false; } return true; });
+    postImageFile.value = "";
+    if (tooBig) alert("কিছু ছবি " + maxMB + "MB এর চেয়ে বড় ছিল এবং বাদ দেওয়া হয়েছে।");
+    if (!valid.length) return;
+    setUploading(true);
+    Promise.all(valid.map(function (f) {
+      return window.HPStore.uploadImage(f).catch(function (e) {
+        console.error(e); alert("ছবি আপলোড ব্যর্থ / Image upload failed: " + e.message); return null;
       });
-    });
-    Promise.all(readers).then(function (results) {
-      results.forEach(function (r) { if (r) pendingImages.push(r); });
-      postImageFile.value = "";
+    })).then(function (urls) {
+      urls.forEach(function (u) { if (u) pendingImages.push(u); });
+      setUploading(false);
       renderChips();
-      if (tooBig) alert("কিছু ছবি ১.৫MB এর চেয়ে বড় ছিল এবং বাদ দেওয়া হয়েছে। ছোট ছবি বা ছবির লিংক ব্যবহার করুন।");
     });
   });
 
@@ -166,14 +198,20 @@
       images: pendingImages.slice(),
       link: postLink.value.trim()
     };
+    publishBtn.disabled = true;
     var op = editingId
       ? window.HPStore.updatePost(editingId, fields)
       : window.HPStore.addPost(fields);
     op.then(function () {
       resetForm();
+      publishBtn.disabled = false;
       okMsg.classList.add("show");
       setTimeout(function () { okMsg.classList.remove("show"); }, 2500);
       renderAdminPosts();
+    }).catch(function (err) {
+      publishBtn.disabled = false;
+      alert("সংরক্ষণ ব্যর্থ / Save failed: " + (err && err.message ? err.message : err) +
+        (supaMode ? "\n\n(সেশন শেষ হয়ে থাকলে আবার লগইন করুন)" : ""));
     });
   });
 
