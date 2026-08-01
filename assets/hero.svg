@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b3d22"/>
+      <stop offset="0.55" stop-color="#12643a"/>
+      <stop offset="1" stop-color="#1c7a48"/>
+    </linearGradient>
+    <linearGradient id="tower" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef4ef"/>
+      <stop offset="1" stop-color="#cfe0d4"/>
+    </linearGradient>
+    <linearGradient id="tower2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#dfeee3"/>
+      <stop offset="1" stop-color="#b9d3c1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1230" cy="210" r="120" fill="#d99a3f" opacity="0.35"/>
+  <circle cx="1230" cy="210" r="80" fill="#f0c27b" opacity="0.4"/>
+  <!-- back buildings -->
+  <g opacity="0.5" fill="#0d4a29">
+    <rect x="120" y="430" width="150" height="470"/>
+    <rect x="300" y="360" width="120" height="540"/>
+    <rect x="1180" y="400" width="160" height="500"/>
+    <rect x="1380" y="330" width="140" height="570"/>
+  </g>
+  <!-- main tower -->
+  <g>
+    <rect x="640" y="180" width="320" height="720" rx="6" fill="url(#tower)"/>
+    <rect x="960" y="300" width="180" height="600" rx="6" fill="url(#tower2)"/>
+    <rect x="470" y="360" width="180" height="540" rx="6" fill="url(#tower2)"/>
+  </g>
+  <!-- windows main -->
+  <g fill="#12643a" opacity="0.85">
+    <g>
+      <rect x="670" y="230" width="55" height="40" rx="3"/><rect x="745" y="230" width="55" height="40" rx="3"/><rect x="820" y="230" width="55" height="40" rx="3"/><rect x="895" y="230" width="35" height="40" rx="3"/>
+    </g>
+  </g>
+  <g fill="#0f5c33" opacity="0.8">
+    <!-- generate rows via repetition -->
+    <rect x="670" y="300" width="55" height="42" rx="3"/><rect x="745" y="300" width="55" height="42" rx="3"/><rect x="820" y="300" width="55" height="42" rx="3"/><rect x="895" y="300" width="35" height="42" rx="3"/>
+    <rect x="670" y="370" width="55" height="42" rx="3"/><rect x="745" y="370" width="55" height="42" rx="3"/><rect x="820" y="370" width="55" height="42" rx="3"/><rect x="895" y="370" width="35" height="42" rx="3"/>
+    <rect x="670" y="440" width="55" height="42" rx="3"/><rect x="745" y="440" width="55" height="42" rx="3"/><rect x="820" y="440" width="55" height="42" rx="3"/><rect x="895" y="440" width="35" height="42" rx="3"/>
+    <rect x="670" y="510" width="55" height="42" rx="3"/><rect x="745" y="510" width="55" height="42" rx="3"/><rect x="820" y="510" width="55" height="42" rx="3"/><rect x="895" y="510" width="35" height="42" rx="3"/>
+    <rect x="670" y="580" width="55" height="42" rx="3"/><rect x="745" y="580" width="55" height="42" rx="3"/><rect x="820" y="580" width="55" height="42" rx="3"/><rect x="895" y="580" width="35" height="42" rx="3"/>
+    <rect x="670" y="650" width="55" height="42" rx="3"/><rect x="745" y="650" width="55" height="42" rx="3"/><rect x="820" y="650" width="55" height="42" rx="3"/><rect x="895" y="650" width="35" height="42" rx="3"/>
+    <rect x="670" y="720" width="55" height="42" rx="3"/><rect x="745" y="720" width="55" height="42" rx="3"/><rect x="820" y="720" width="55" height="42" rx="3"/><rect x="895" y="720" width="35" height="42" rx="3"/>
+  </g>
+  <!-- side towers windows -->
+  <g fill="#1c7a48" opacity="0.65">
+    <rect x="985" y="340" width="45" height="40" rx="3"/><rect x="1050" y="340" width="45" height="40" rx="3"/>
+    <rect x="985" y="410" width="45" height="40" rx="3"/><rect x="1050" y="410" width="45" height="40" rx="3"/>
+    <rect x="985" y="480" width="45" height="40" rx="3"/><rect x="1050" y="480" width="45" height="40" rx="3"/>
+    <rect x="985" y="550" width="45" height="40" rx="3"/><rect x="1050" y="550" width="45" height="40" rx="3"/>
+    <rect x="985" y="620" width="45" height="40" rx="3"/><rect x="1050" y="620" width="45" height="40" rx="3"/>
+    <rect x="985" y="690" width="45" height="40" rx="3"/><rect x="1050" y="690" width="45" height="40" rx="3"/>
+    <rect x="985" y="760" width="45" height="40" rx="3"/><rect x="1050" y="760" width="45" height="40" rx="3"/>
+    <rect x="495" y="400" width="45" height="40" rx="3"/><rect x="560" y="400" width="45" height="40" rx="3"/>
+    <rect x="495" y="470" width="45" height="40" rx="3"/><rect x="560" y="470" width="45" height="40" rx="3"/>
+    <rect x="495" y="540" width="45" height="40" rx="3"/><rect x="560" y="540" width="45" height="40" rx="3"/>
+    <rect x="495" y="610" width="45" height="40" rx="3"/><rect x="560" y="610" width="45" height="40" rx="3"/>
+    <rect x="495" y="680" width="45" height="40" rx="3"/><rect x="560" y="680" width="45" height="40" rx="3"/>
+    <rect x="495" y="750" width="45" height="40" rx="3"/><rect x="560" y="750" width="45" height="40" rx="3"/>
+  </g>
+  <rect x="0" y="880" width="1600" height="20" fill="#0b3d22"/>
+</svg>

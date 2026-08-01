@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>অ্যাডমিন প্যানেল | এইচ. প্রোপার্টিজ</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f5c33'/%3E%3Cpath d='M32 14 15 28h5v20h24V28h5z' fill='%237bc47f'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Login -->
+  <div class="login-wrap" id="loginView">
+    <div class="admin-card">
+      <div class="brand" style="justify-content:center;margin-bottom:1.2rem">
+        <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 8 6 23h5v17h11V29h4v11h11V23h5z"/></svg></span>
+        <span class="brand__text">
+          <span class="brand__bn">এইচ. প্রোপার্টিজ</span>
+          <span class="brand__en">ADMIN PANEL</span>
+        </span>
+      </div>
+      <h2 style="text-align:center">অ্যাডমিন লগইন</h2>
+      <div class="field">
+        <label>পাসওয়ার্ড / Password</label>
+        <input type="password" id="pw" placeholder="••••••••" />
+      </div>
+      <button class="btn btn--gold btn--block" id="loginBtn">লগইন / Login</button>
+      <div class="admin-msg err" id="loginErr">ভুল পাসওয়ার্ড / Wrong password</div>
+      <p class="admin-hint">শুধুমাত্র অনুমোদিত ব্যবহারকারীর জন্য। পাসওয়ার্ড পরিবর্তন করতে <code>admin.js</code> ফাইলের <code>ADMIN_PASSWORD</code> এডিট করুন।</p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="admin-shell" id="dashView" hidden>
+    <div class="admin-top">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 8 6 23h5v17h11V29h4v11h11V23h5z"/></svg></span>
+        <span class="brand__text">
+          <span class="brand__bn">এইচ. প্রোপার্টিজ</span>
+          <span class="brand__en">ADMIN PANEL</span>
+        </span>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+        <span class="badge-mode" id="modeBadge">লোকাল মোড</span>
+        <a href="index.html" class="btn btn--sm btn--ghost-dark" target="_blank">সাইট দেখুন ↗</a>
+        <button class="btn btn--sm btn--dark" id="logoutBtn">লগআউট</button>
+      </div>
+    </div>
+
+    <div class="admin-msg" id="storageWarn" style="background:#fff6e6;color:#8a5a00">
+      ⚠️ <strong>লোকাল মোড:</strong> এই পোস্টগুলো শুধু আপনার এই ব্রাউজারে সংরক্ষিত থাকবে — অন্য দর্শকদের কাছে দেখাবে না।
+      সব দর্শকের জন্য পোস্ট দেখাতে একটি ব্যাকএন্ড (Supabase) যুক্ত করতে হবে।
+    </div>
+
+    <div class="admin-card">
+      <h2 id="formTitle">➕ নতুন পোস্ট / New Post</h2>
+      <div class="field">
+        <label>শিরোনাম / Title *</label>
+        <input type="text" id="postTitle" placeholder="যেমন: নতুন প্রকল্পের কাজ শুরু" />
+      </div>
+      <div class="field">
+        <label>বিবরণ / Description *</label>
+        <textarea id="postBody" rows="4" placeholder="পোস্টের বিস্তারিত লিখুন…"></textarea>
+      </div>
+      <div class="field">
+        <label>ছবি আপলোড / Upload image (optional)</label>
+        <input type="file" id="postImageFile" accept="image/*" />
+      </div>
+      <div class="field">
+        <label>অথবা ছবির লিংক / Or image URL (optional)</label>
+        <input type="url" id="postImageUrl" placeholder="https://…" />
+      </div>
+      <div id="imgPreviewWrap" style="margin-bottom:1rem" hidden>
+        <img id="imgPreview" alt="preview" style="max-height:160px;border-radius:10px;border:1px solid var(--line)" />
+      </div>
+      <button class="btn btn--gold" id="publishBtn">প্রকাশ করুন / Publish</button>
+      <button class="btn btn--ghost-dark" id="cancelEditBtn" hidden>বাতিল / Cancel</button>
+      <div class="admin-msg ok" id="okMsg">✅ প্রকাশিত হয়েছে!</div>
+    </div>
+
+    <div class="admin-card">
+      <h2>📋 প্রকাশিত পোস্টসমূহ / Published posts (<span id="postCount">0</span>)</h2>
+      <div id="adminPosts"></div>
+      <div class="admin-empty" id="adminEmpty">এখনও কোনো পোস্ট নেই।</div>
+    </div>
+  </div>
+
+  <script src="store.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eaf3ec"/><stop offset="1" stop-color="#cfe4d6"/></linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#s)"/>
+  <!-- building under construction -->
+  <rect x="180" y="150" width="330" height="420" fill="#e7efe9"/>
+  <rect x="180" y="150" width="330" height="420" fill="none" stroke="#bcd3c3" stroke-width="2"/>
+  <g fill="#12643a" opacity="0.8">
+    <rect x="210" y="185" width="60" height="48"/><rect x="290" y="185" width="60" height="48"/><rect x="370" y="185" width="60" height="48"/><rect x="450" y="185" width="40" height="48"/>
+    <rect x="210" y="255" width="60" height="48"/><rect x="290" y="255" width="60" height="48"/><rect x="370" y="255" width="60" height="48"/><rect x="450" y="255" width="40" height="48"/>
+    <rect x="210" y="325" width="60" height="48"/><rect x="290" y="325" width="60" height="48"/><rect x="370" y="325" width="60" height="48"/><rect x="450" y="325" width="40" height="48"/>
+  </g>
+  <!-- exposed top floor (under construction) -->
+  <g stroke="#9ab7a5" stroke-width="6" fill="none">
+    <rect x="180" y="110" width="330" height="40"/>
+    <line x1="220" y1="110" x2="220" y2="150"/><line x1="280" y1="110" x2="280" y2="150"/><line x1="340" y1="110" x2="340" y2="150"/><line x1="400" y1="110" x2="400" y2="150"/><line x1="460" y1="110" x2="460" y2="150"/>
+  </g>
+  <!-- crane -->
+  <g stroke="#d99a3f" stroke-width="8" fill="none">
+    <line x1="600" y1="80" x2="600" y2="570"/>
+    <line x1="600" y1="90" x2="380" y2="90"/>
+    <line x1="600" y1="90" x2="700" y2="90"/>
+    <line x1="600" y1="80" x2="440" y2="90"/>
+    <line x1="600" y1="80" x2="680" y2="90"/>
+  </g>
+  <line x1="430" y1="90" x2="430" y2="200" stroke="#d99a3f" stroke-width="4"/>
+  <rect x="410" y="200" width="40" height="26" fill="#d99a3f"/>
+  <rect x="120" y="560" width="620" height="40" fill="#0f5c33"/>
+</svg>
