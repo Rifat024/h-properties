@@ -13,6 +13,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f5c33'/%3E%3Cpath d='M32 14 15 28h5v20h24V28h5z' fill='%237bc47f'/%3E%3Ctext x='50%25' y='60%25' font-family='Arial' font-size='16' font-weight='700' fill='%230f5c33' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("hp_theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <!-- Top bar -->
@@ -48,6 +57,10 @@
         <a href="#contact" class="btn btn--sm btn--gold nav__cta" data-bn="পরামর্শ নিন" data-en="Get a Quote">পরামর্শ নিন</a>
       </nav>
       <div class="nav__right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Light / Dark">
+          <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="ico-sun" viewBox="0 0 24 24"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1 1 1V4a1 1 0 0 1-2 0 1 1 0 0 1 1-1zm0 15a1 1 0 0 1 1 1 1 1 0 0 1-2 0 1 1 0 0 1 1-1zm9-8a1 1 0 0 1 0 2h0a1 1 0 0 1 0-2zM4 11a1 1 0 0 1 0 2H3a1 1 0 0 1 0-2zm14.7-6.7a1 1 0 0 1 1.4 1.4l-.7.7A1 1 0 0 1 18 5zM5.6 17.7a1 1 0 0 1 1.4 1.4l-.7.7a1 1 0 0 1-1.4-1.4zm12.7 0 .7.7a1 1 0 0 1-1.4 1.4l-.7-.7a1 1 0 0 1 1.4-1.4zM5.6 6.3l-.7-.7a1 1 0 0 1 1.4-1.4l.7.7A1 1 0 0 1 5.6 6.3z"/></svg>
+        </button>
         <button class="lang" id="langToggle" aria-label="Switch language">
           <span class="lang__opt is-active" data-lang="bn">বাংলা</span>
           <span class="lang__sep">/</span>

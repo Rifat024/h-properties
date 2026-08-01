@@ -10,6 +10,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f5c33'/%3E%3Cpath d='M32 14 15 28h5v20h24V28h5z' fill='%237bc47f'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("hp_theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="admin-body">
 
@@ -46,6 +55,10 @@
       </div>
       <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
         <span class="badge-mode" id="modeBadge">লোকাল মোড</span>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Light / Dark">
+          <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="ico-sun" viewBox="0 0 24 24"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1 1 1V4a1 1 0 0 1-2 0 1 1 0 0 1 1-1zm0 15a1 1 0 0 1 1 1 1 1 0 0 1-2 0 1 1 0 0 1 1-1zm9-8a1 1 0 0 1 0 2h0a1 1 0 0 1 0-2zM4 11a1 1 0 0 1 0 2H3a1 1 0 0 1 0-2zm14.7-6.7a1 1 0 0 1 1.4 1.4l-.7.7A1 1 0 0 1 18 5zM5.6 17.7a1 1 0 0 1 1.4 1.4l-.7.7a1 1 0 0 1-1.4-1.4zm12.7 0 .7.7a1 1 0 0 1-1.4 1.4l-.7-.7a1 1 0 0 1 1.4-1.4zM5.6 6.3l-.7-.7a1 1 0 0 1 1.4-1.4l.7.7A1 1 0 0 1 5.6 6.3z"/></svg>
+        </button>
         <a href="index.html" class="btn btn--sm btn--ghost-dark" target="_blank">সাইট দেখুন ↗</a>
         <button class="btn btn--sm btn--dark" id="logoutBtn">লগআউট</button>
       </div>
@@ -57,6 +70,7 @@
     </div>
 
     <div class="admin-card">
+      <div class="editing-banner" id="editingBanner">✏️ পোস্ট এডিট করা হচ্ছে / Editing a post</div>
       <h2 id="formTitle">➕ নতুন পোস্ট / New Post</h2>
       <div class="field">
         <label>শিরোনাম / Title *</label>
@@ -67,19 +81,24 @@
         <textarea id="postBody" rows="4" placeholder="পোস্টের বিস্তারিত লিখুন…"></textarea>
       </div>
       <div class="field">
-        <label>ছবি আপলোড / Upload image (optional)</label>
-        <input type="file" id="postImageFile" accept="image/*" />
+        <label>ছবি আপলোড / Upload images (multiple) — একাধিক ছবি একসাথে নির্বাচন করুন</label>
+        <input type="file" id="postImageFile" accept="image/*" multiple />
       </div>
       <div class="field">
-        <label>অথবা ছবির লিংক / Or image URL (optional)</label>
-        <input type="url" id="postImageUrl" placeholder="https://…" />
+        <label>অথবা ছবির লিংক যোগ করুন / Add image URL</label>
+        <div style="display:flex;gap:.5rem">
+          <input type="url" id="postImageUrl" placeholder="https://…" style="flex:1" />
+          <button class="btn btn--dark btn--sm" id="addUrlBtn" type="button">যোগ করুন</button>
+        </div>
       </div>
-      <div id="imgPreviewWrap" style="margin-bottom:1rem" hidden>
-        <img id="imgPreview" alt="preview" style="max-height:160px;border-radius:10px;border:1px solid var(--line)" />
+      <div class="img-chips" id="imgChips"></div>
+      <div class="field">
+        <label>পোস্ট লিংক / Post link (optional) — ক্লিক করলে এখানে যাবে (যেমন ফেসবুক পোস্ট)</label>
+        <input type="url" id="postLink" placeholder="https://www.facebook.com/…" />
       </div>
       <button class="btn btn--gold" id="publishBtn">প্রকাশ করুন / Publish</button>
-      <button class="btn btn--ghost-dark" id="cancelEditBtn" hidden>বাতিল / Cancel</button>
-      <div class="admin-msg ok" id="okMsg">✅ প্রকাশিত হয়েছে!</div>
+      <button class="btn btn--ghost-dark" id="cancelEditBtn" type="button" hidden>বাতিল / Cancel</button>
+      <div class="admin-msg ok" id="okMsg">✅ সংরক্ষিত হয়েছে!</div>
     </div>
 
     <div class="admin-card">

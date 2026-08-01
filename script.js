@@ -23,6 +23,17 @@
     });
   }
 
+  /* ---------- Theme toggle (light/dark) ---------- */
+  var themeToggle = document.getElementById("themeToggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", function () {
+      var cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      var next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("hp_theme", next); } catch (e) {}
+    });
+  }
+
   /* ---------- Mobile nav ---------- */
   var hamburger = document.getElementById("hamburger");
   var navLinks = document.getElementById("navLinks");
@@ -104,6 +115,47 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   }
+  function mediaMarkup(images) {
+    if (!images || !images.length) return '<div class="post__img"></div>';
+    if (images.length === 1) {
+      return '<div class="post__img" style="background-image:url(' + JSON.stringify(images[0]) + ')"></div>';
+    }
+    var slides = images.map(function (src) {
+      return '<div class="slider__slide" style="background-image:url(' + JSON.stringify(src) + ')"></div>';
+    }).join("");
+    var dots = images.map(function (_, i) {
+      return '<button class="slider__dot' + (i === 0 ? " active" : "") + '" data-i="' + i + '" aria-label="slide ' + (i + 1) + '"></button>';
+    }).join("");
+    return '<div class="post__img slider">' +
+      '<div class="slider__track">' + slides + "</div>" +
+      '<button class="slider__btn slider__btn--prev" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>' +
+      '<button class="slider__btn slider__btn--next" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>' +
+      '<div class="slider__dots">' + dots + "</div>" +
+    "</div>";
+  }
+
+  function initSlider(slider) {
+    var track = slider.querySelector(".slider__track");
+    var slides = slider.querySelectorAll(".slider__slide");
+    var dots = slider.querySelectorAll(".slider__dot");
+    var idx = 0, timer = null;
+    function go(i) {
+      idx = (i + slides.length) % slides.length;
+      track.style.transform = "translateX(-" + (idx * 100) + "%)";
+      dots.forEach(function (d, di) { d.classList.toggle("active", di === idx); });
+    }
+    function auto() { timer = setInterval(function () { go(idx + 1); }, 4000); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    slider.querySelector(".slider__btn--prev").addEventListener("click", function () { go(idx - 1); stop(); auto(); });
+    slider.querySelector(".slider__btn--next").addEventListener("click", function () { go(idx + 1); stop(); auto(); });
+    dots.forEach(function (d) {
+      d.addEventListener("click", function () { go(parseInt(d.getAttribute("data-i"), 10)); stop(); auto(); });
+    });
+    slider.addEventListener("mouseenter", stop);
+    slider.addEventListener("mouseleave", auto);
+    auto();
+  }
+
   function renderPosts() {
     if (!postsGrid || !window.HPStore) return;
     window.HPStore.getPosts().then(function (posts) {
@@ -113,20 +165,24 @@
         return;
       }
       if (postsEmpty) postsEmpty.hidden = true;
+      var lang = window.HP_LANG || localStorage.getItem("hp_lang") || "bn";
+      var moreLabel = lang === "en" ? "View details ↗" : "বিস্তারিত দেখুন ↗";
       posts.forEach(function (p) {
         var card = document.createElement("article");
         card.className = "post reveal";
-        var img = p.image
-          ? '<div class="post__img" style="background-image:url(' + JSON.stringify(p.image) + ')"></div>'
-          : '<div class="post__img"></div>';
-        card.innerHTML = img +
+        var linkHtml = p.link
+          ? '<a class="post__link" href="' + esc(p.link) + '" target="_blank" rel="noopener">' + moreLabel + "</a>"
+          : "";
+        card.innerHTML = mediaMarkup(p.images) +
           '<div class="post__body">' +
             '<span class="post__date">' + esc(fmtDate(p.createdAt)) + "</span>" +
             "<h3>" + esc(p.title) + "</h3>" +
             "<p>" + esc(p.body) + "</p>" +
+            linkHtml +
           "</div>";
         postsGrid.appendChild(card);
       });
+      postsGrid.querySelectorAll(".slider").forEach(initSlider);
       observeReveals();
     });
   }
