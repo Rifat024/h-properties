@@ -52,11 +52,10 @@
 
   /* ---------- Nav shadow on scroll ---------- */
   var nav = document.getElementById("nav");
-  function onScroll() {
+  function updateNav() {
     if (nav) nav.classList.toggle("scrolled", window.scrollY > 12);
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  updateNav();
 
   /* ---------- Scroll reveal (IO + reliable scroll fallback) ---------- */
   var io = null;
@@ -67,14 +66,19 @@
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
   }
+  var allRevealed = false;
   function revealInView() {
+    if (allRevealed) return;
+    var pending = document.querySelectorAll(".reveal:not(.in)");
+    if (!pending.length) { allRevealed = true; return; }
     var vh = window.innerHeight || document.documentElement.clientHeight;
-    document.querySelectorAll(".reveal:not(.in)").forEach(function (el) {
+    pending.forEach(function (el) {
       var r = el.getBoundingClientRect();
       if (r.top < vh * 0.92 && r.bottom > 0) el.classList.add("in");
     });
   }
   function observeReveals() {
+    allRevealed = false;
     document.querySelectorAll(".reveal:not(.in)").forEach(function (el) {
       var grid = el.parentElement && el.parentElement.classList.contains("grid");
       if (grid) el.style.setProperty("--i", Array.prototype.indexOf.call(el.parentElement.children, el));
@@ -82,19 +86,20 @@
     });
     revealInView();
   }
-  // Reliable fallback: reveal on scroll/resize even if IO doesn't fire.
+  // Single rAF-throttled scroll handler: nav shadow + reveal fallback (IO is primary).
   var ticking = false;
-  function onScrollReveal() {
+  function onScroll() {
     if (ticking) return;
     ticking = true;
-    window.requestAnimationFrame(function () { revealInView(); ticking = false; });
+    window.requestAnimationFrame(function () { updateNav(); revealInView(); ticking = false; });
   }
-  window.addEventListener("scroll", onScrollReveal, { passive: true });
-  window.addEventListener("resize", onScrollReveal, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
   window.addEventListener("load", revealInView);
-  // Absolute safety net: never leave content invisible if IO/scroll never fire.
+  // Safety net: never leave content invisible if IO/scroll never fire.
   setTimeout(function () {
     document.querySelectorAll(".reveal:not(.in)").forEach(function (el) { el.classList.add("in"); });
+    allRevealed = true;
   }, 3000);
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "visible") revealInView();
