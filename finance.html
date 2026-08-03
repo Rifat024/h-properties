@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ফিন্যান্স ড্যাশবোর্ড | এইচ. প্রোপার্টিজ</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f5c33'/%3E%3Cpath d='M32 14 15 28h5v20h24V28h5z' fill='%237bc47f'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("hp_theme");
+        if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="admin-body">
+
+  <!-- Login -->
+  <div class="login-wrap" id="loginView">
+    <div class="admin-card">
+      <div class="brand" style="justify-content:center;margin-bottom:1.2rem">
+        <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 8 6 23h5v17h11V29h4v11h11V23h5z"/></svg></span>
+        <span class="brand__text"><span class="brand__bn">এইচ. প্রোপার্টিজ</span><span class="brand__en">FINANCE</span></span>
+      </div>
+      <h2 style="text-align:center">ফিন্যান্স লগইন</h2>
+      <div class="field" id="emailField" hidden>
+        <label>ইমেইল / Email</label>
+        <input type="email" id="email" autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>পাসওয়ার্ড / Password</label>
+        <input type="password" id="pw" autocomplete="current-password" />
+      </div>
+      <button class="btn btn--gold btn--block" id="loginBtn">লগইন / Login</button>
+      <div class="admin-msg err" id="loginErr">ভুল তথ্য</div>
+      <p class="admin-hint" id="loginHint">শুধুমাত্র অনুমোদিত ব্যবহারকারীর জন্য।</p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="admin-shell fin-shell" id="dashView" hidden>
+    <div class="admin-top">
+      <div class="brand">
+        <span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 8 6 23h5v17h11V29h4v11h11V23h5z"/></svg></span>
+        <span class="brand__text"><span class="brand__bn">ফিন্যান্স ড্যাশবোর্ড</span><span class="brand__en">H. PROPERTIES</span></span>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+        <span class="badge-mode" id="modeBadge">লোকাল</span>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Light / Dark">
+          <svg class="ico-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="ico-sun" viewBox="0 0 24 24"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-13a1 1 0 0 1 1 1V4a1 1 0 0 1-2 0 1 1 0 0 1 1-1zm0 15a1 1 0 0 1 1 1 1 1 0 0 1-2 0 1 1 0 0 1 1-1zm9-8a1 1 0 0 1 0 2h0a1 1 0 0 1 0-2zM4 11a1 1 0 0 1 0 2H3a1 1 0 0 1 0-2zm14.7-6.7a1 1 0 0 1 1.4 1.4l-.7.7A1 1 0 0 1 18 5zM5.6 17.7a1 1 0 0 1 1.4 1.4l-.7.7a1 1 0 0 1-1.4-1.4zm12.7 0 .7.7a1 1 0 0 1-1.4 1.4l-.7-.7a1 1 0 0 1 1.4-1.4zM5.6 6.3l-.7-.7a1 1 0 0 1 1.4-1.4l.7.7A1 1 0 0 1 5.6 6.3z"/></svg>
+        </button>
+        <a href="admin.html" class="btn btn--sm btn--ghost-dark">পোস্ট প্যানেল</a>
+        <button class="btn btn--sm btn--dark" id="logoutBtn">লগআউট</button>
+      </div>
+    </div>
+
+    <div class="admin-msg" id="storageWarn" style="background:#fff6e6;color:#8a5a00">
+      ⚠️ <strong>লোকাল মোড:</strong> ডেটা শুধু এই ব্রাউজারে সংরক্ষিত। লাইভ ব্যাকএন্ডের জন্য Supabase কনফিগার করুন।
+    </div>
+
+    <div class="fin-tabs" id="finTabs">
+      <button class="fin-tab is-active" data-tab="dashboard">📊 ড্যাশবোর্ড</button>
+      <button class="fin-tab" data-tab="entry">➕ এন্ট্রি</button>
+      <button class="fin-tab" data-tab="manage">⚙️ ম্যানেজ</button>
+    </div>
+
+    <!-- TAB: Dashboard -->
+    <section class="fin-panel is-active" id="tab-dashboard">
+      <div class="fin-filters">
+        <div class="field"><label>প্রকল্প / Project</label><select id="fltProject"><option value="">সব প্রকল্প</option></select></div>
+        <div class="field"><label>শুরুর তারিখ / From</label><input type="date" id="fltFrom" /></div>
+        <div class="field"><label>শেষ তারিখ / To</label><input type="date" id="fltTo" /></div>
+        <button class="btn btn--sm btn--ghost-dark" id="fltClear" type="button">রিসেট</button>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><span class="kpi__label">মোট আয় / Income</span><span class="kpi__val kpi--in" id="kpiIncome">৳0</span></div>
+        <div class="kpi"><span class="kpi__label">মোট খরচ / Cost</span><span class="kpi__val kpi--cost" id="kpiCost">৳0</span></div>
+        <div class="kpi"><span class="kpi__label">লাভ/ক্ষতি / Profit</span><span class="kpi__val" id="kpiProfit">৳0</span></div>
+        <div class="kpi"><span class="kpi__label">মার্জিন / Margin</span><span class="kpi__val" id="kpiMargin">0%</span></div>
+      </div>
+
+      <div class="fin-grid2">
+        <div class="admin-card">
+          <h3>প্রকল্পভিত্তিক লাভ/ক্ষতি</h3>
+          <div style="overflow-x:auto"><table class="fin-table" id="projTable"><thead><tr>
+            <th>প্রকল্প</th><th>বাজেট</th><th>আয়</th><th>খরচ</th><th>লাভ/ক্ষতি</th><th>বাজেট ব্যবহার</th>
+          </tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="admin-card">
+          <h3>ক্যাটাগরিভিত্তিক খরচ</h3>
+          <canvas id="catChart" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="fin-grid2">
+        <div class="admin-card">
+          <h3>মাসিক আয় বনাম খরচ</h3>
+          <canvas id="trendChart" height="200"></canvas>
+        </div>
+        <div class="admin-card">
+          <h3>খরচের বিস্তারিত (সাব-ক্যাটাগরি)</h3>
+          <canvas id="subChart" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: Entry -->
+    <section class="fin-panel" id="tab-entry">
+      <div class="admin-card">
+        <div class="editing-banner" id="editBanner">✏️ এন্ট্রি এডিট করা হচ্ছে</div>
+        <h2 id="entryTitle">➕ নতুন এন্ট্রি</h2>
+
+        <div class="seg" id="typeSeg">
+          <button class="seg__btn is-active" data-type="cost">💸 খরচ / Cost</button>
+          <button class="seg__btn" data-type="income">💰 আয় / Income</button>
+        </div>
+
+        <div class="admin-card ai-box">
+          <label style="font-weight:600;display:block;margin-bottom:.5rem">📷 কস্টিং এর ছবি তুলুন / আপলোড করুন → AI ডেটা বের করবে</label>
+          <input type="file" id="scanFile" accept="image/*" capture="environment" />
+          <button class="btn btn--dark btn--sm" id="scanBtn" type="button" style="margin-top:.6rem">🤖 AI দিয়ে স্ক্যান করুন</button>
+          <span class="scan-status" id="scanStatus"></span>
+          <div id="scanPreviewWrap" hidden style="margin-top:.7rem"><img id="scanPreview" style="max-height:150px;border-radius:10px;border:1px solid var(--line)" /></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>প্রকল্প / Project</label>
+            <div style="display:flex;gap:.4rem">
+              <select id="enProject" style="flex:1"></select>
+              <button class="btn btn--dark btn--sm" id="addProjectBtn" type="button">＋</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>তারিখ / Date</label>
+            <input type="date" id="enDate" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>ক্যাটাগরি / Category</label>
+            <div style="display:flex;gap:.4rem">
+              <select id="enCategory" style="flex:1"></select>
+              <button class="btn btn--dark btn--sm" id="addCatBtn" type="button">＋</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>সাব-ক্যাটাগরি / Sub-category</label>
+            <div style="display:flex;gap:.4rem">
+              <select id="enSubcat" style="flex:1"></select>
+              <button class="btn btn--dark btn--sm" id="addSubBtn" type="button">＋</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>পরিমাণ (৳) / Amount</label><input type="number" id="enAmount" step="0.01" placeholder="0" /></div>
+          <div class="field"><label>নোট / Note</label><input type="text" id="enNote" placeholder="বিবরণ (ঐচ্ছিক)" /></div>
+        </div>
+
+        <button class="btn btn--gold" id="saveEntryBtn">সংরক্ষণ করুন / Save</button>
+        <button class="btn btn--ghost-dark" id="cancelEntryBtn" type="button" hidden>বাতিল</button>
+        <div class="admin-msg ok" id="entryOk">✅ সংরক্ষিত হয়েছে!</div>
+      </div>
+    </section>
+
+    <!-- TAB: Manage -->
+    <section class="fin-panel" id="tab-manage">
+      <div class="admin-card">
+        <h2>🏗️ প্রকল্পসমূহ</h2>
+        <div class="field-row">
+          <div class="field"><label>নাম</label><input type="text" id="mpName" placeholder="প্রকল্পের নাম" /></div>
+          <div class="field"><label>বাজেট (৳)</label><input type="number" id="mpBudget" step="0.01" placeholder="0" /></div>
+          <div class="field"><label>অবস্থা</label><select id="mpStatus"><option value="running">চলমান</option><option value="completed">সম্পন্ন</option><option value="on-hold">স্থগিত</option></select></div>
+        </div>
+        <button class="btn btn--gold btn--sm" id="mpAdd">প্রকল্প যোগ করুন</button>
+        <div id="mpList" style="margin-top:1rem"></div>
+      </div>
+
+      <div class="admin-card">
+        <h2>🏷️ ক্যাটাগরি ও সাব-ক্যাটাগরি</h2>
+        <div class="field-row">
+          <div class="field"><label>ধরন</label><select id="mcKind"><option value="cost">খরচ</option><option value="income">আয়</option></select></div>
+          <div class="field"><label>প্যারেন্ট (সাব হলে)</label><select id="mcParent"><option value="">— টপ ক্যাটাগরি —</option></select></div>
+          <div class="field"><label>নাম</label><input type="text" id="mcName" placeholder="ক্যাটাগরির নাম" /></div>
+        </div>
+        <button class="btn btn--gold btn--sm" id="mcAdd">ক্যাটাগরি যোগ করুন</button>
+        <div id="mcList" style="margin-top:1rem"></div>
+      </div>
+
+      <div class="admin-card">
+        <h2>📒 সাম্প্রতিক লেনদেন</h2>
+        <div style="overflow-x:auto"><table class="fin-table" id="txnTable"><thead><tr>
+          <th>তারিখ</th><th>ধরন</th><th>প্রকল্প</th><th>ক্যাটাগরি</th><th>পরিমাণ</th><th></th>
+        </tr></thead><tbody></tbody></table></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="store.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="finance.js"></script>
+</body>
+</html>

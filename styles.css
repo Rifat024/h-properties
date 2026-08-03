@@ -393,3 +393,54 @@ h1,h2,h3{font-family:var(--display);color:var(--ink);line-height:1.2;font-weight
 .admin-post__actions{display:flex;flex-direction:column;gap:.5rem}
 .btn--edit{--bg:var(--muted);--fg:var(--ink);box-shadow:none;padding:.5rem .9rem;font-size:.85rem;border:1px solid var(--line)}
 .btn--edit:hover{--bg:var(--navy);--fg:#fff}
+
+/* ---------- Finance dashboard ---------- */
+.fin-shell{max-width:1100px}
+.fin-tabs{display:flex;gap:.5rem;margin-bottom:22px;flex-wrap:wrap}
+.fin-tab{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:.6rem 1.2rem;
+  font-family:var(--sans);font-weight:600;color:var(--body);cursor:pointer;transition:.2s;font-size:.95rem}
+.fin-tab.is-active{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border-color:transparent}
+.fin-panel{display:none}
+.fin-panel.is-active{display:block}
+.fin-filters{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.fin-filters .field{margin-bottom:0}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm)}
+.kpi__label{display:block;font-size:.85rem;color:var(--body);margin-bottom:.4rem}
+.kpi__val{font-family:var(--display);font-size:1.7rem;font-weight:800;color:var(--ink)}
+.kpi--in{color:#1f9d54}
+.kpi--cost{color:#d1653a}
+.fin-grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;align-items:start}
+.fin-grid2 .admin-card{margin-bottom:0}
+.fin-grid2 h3,.fin-panel h3{font-size:1.1rem;margin-bottom:1rem}
+.fin-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.fin-table th{text-align:left;color:var(--body);font-weight:600;padding:.5rem .6rem;border-bottom:2px solid var(--line);font-size:.82rem}
+.fin-table td{padding:.55rem .6rem;border-bottom:1px solid var(--line);color:var(--ink)}
+.fin-table .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.fin-table .in{color:#1f9d54}
+.fin-table .cost{color:#d1653a}
+.bar{display:inline-block;width:70px;height:7px;border-radius:4px;background:var(--muted);overflow:hidden;vertical-align:middle;margin-right:.4rem}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2))}
+.seg{display:inline-flex;background:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:1.2rem}
+.seg__btn{background:none;border:none;padding:.5rem 1.2rem;border-radius:999px;cursor:pointer;font-family:var(--sans);font-weight:600;color:var(--body)}
+.seg__btn.is-active{background:var(--card);color:var(--ink);box-shadow:var(--shadow-sm)}
+.ai-box{background:var(--muted);border-style:dashed}
+.scan-status{display:inline-block;margin-left:.6rem;font-size:.88rem;color:var(--body)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.mrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:12px;margin-bottom:.6rem}
+.mrow__sub{color:var(--body);font-size:.85rem}
+.mrow--cat{align-items:flex-start}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;padding:.15rem .55rem;border-radius:999px;margin-left:.4rem}
+.pill--cost{background:#fbe6d8;color:#b0592f}
+.pill--income{background:#dcf2e4;color:#1f7a44}
+:root[data-theme="dark"] .pill--cost{background:#3a2418;color:#e0a06f}
+:root[data-theme="dark"] .pill--income{background:#12331f;color:#6fd898}
+.subs{margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{background:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.2rem .6rem;font-size:.8rem;color:var(--ink);cursor:pointer}
+.chip:hover{background:#fdeaea;color:#c0392b;border-color:#f3c4c4}
+@media (max-width:820px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .fin-grid2{grid-template-columns:1fr}
+  .field-row{grid-template-columns:1fr}
+}

@@ -46,5 +46,20 @@ This is a static site — Vercel auto-detects it, no build config needed.
 The `assets/*.svg` files are placeholder building illustrations. Replace them (or point the
 `data-slot` elements in `index.html` / `styles.css` to real `.jpg`/`.png` files in `assets/`).
 
+## Finance dashboard (`/finance.html`)
+
+Private, admin-only costing + income + profit/loss system (Supabase-backed).
+
+- **Setup:** run `supabase-finance.sql` in Supabase (creates `fin_projects`, `fin_categories`,
+  `fin_transactions` + private `cost-photos` bucket, RLS = authenticated only).
+- **AI receipt scanning:** the `api/extract-cost.js` Vercel function reads a photo with Claude
+  vision and returns structured cost data. Set env var **`ANTHROPIC_API_KEY`** in Vercel
+  (Project → Settings → Environment Variables). Optional **`ANTHROPIC_MODEL`** (default
+  `claude-opus-5`; set `claude-haiku-4-5` for lower cost per scan).
+- **Features:** photo/camera capture → AI extract → review → save; manual entry; dynamic
+  categories & sub-categories; dashboard with KPIs (income/cost/profit/margin), per-project
+  P&L, category donut + sub-category bar, monthly income-vs-cost trend (Chart.js).
+- Reached from the admin panel's **💰 ফিন্যান্স** button; same Supabase login.
+
 ---
 © H. Properties, Rajshahi. Built with care.
