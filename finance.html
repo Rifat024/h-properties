@@ -125,14 +125,13 @@
         </div>
 
         <div class="admin-card ai-box">
-          <label style="font-weight:600;display:block;margin-bottom:.5rem">📷 কস্টিং এর ছবি তুলুন / আপলোড করুন → ডেটা বের করুন</label>
+          <label style="font-weight:600;display:block;margin-bottom:.5rem">📷 কস্টিং স্লিপের ছবি তুলুন / আপলোড করুন → ডেটা বের করুন</label>
           <input type="file" id="scanFile" accept="image/*" capture="environment" />
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem">
-            <button class="btn btn--dark btn--sm" id="ocrBtn" type="button">📴 অফলাইন স্ক্যান (বিনামূল্যে)</button>
-            <button class="btn btn--ghost-dark btn--sm" id="scanBtn" type="button">🤖 AI স্ক্যান (নির্ভুল)</button>
+          <div style="margin-top:.6rem">
+            <button class="btn btn--gold btn--sm" id="ocrBtn" type="button">🔍 স্ক্যান করে ডেটা বসান</button>
           </div>
           <span class="scan-status" id="scanStatus"></span>
-          <p class="admin-hint" style="margin-top:.5rem">অফলাইন স্ক্যান বিনা খরচে ব্রাউজারেই কাজ করে (স্পষ্ট প্রিন্টেড স্লিপে ভালো)। AI স্ক্যান বেশি নির্ভুল কিন্তু Vercel-এ ANTHROPIC_API_KEY দরকার।</p>
+          <p class="admin-hint" style="margin-top:.5rem">প্রথমে বিনামূল্যে ব্রাউজারেই পড়ার চেষ্টা করে। না পড়তে পারলে স্বয়ংক্রিয়ভাবে AI দিয়ে চেষ্টা করে (এর জন্য Vercel-এ ANTHROPIC_API_KEY থাকতে হবে; না থাকলে হাতে লিখুন)।</p>
           <div id="scanPreviewWrap" hidden style="margin-top:.7rem"><img id="scanPreview" style="max-height:150px;border-radius:10px;border:1px solid var(--line)" /></div>
         </div>
 

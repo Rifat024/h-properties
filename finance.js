@@ -163,20 +163,17 @@
     var f = scanFile.files[0]; if (!f) return;
     var r = new FileReader(); r.onload = function (e) { $("scanPreview").src = e.target.result; $("scanPreviewWrap").hidden = false; }; r.readAsDataURL(f);
   });
-  $("scanBtn").addEventListener("click", function () {
-    var f = scanFile.files[0];
-    if (!f) { alert("আগে একটি ছবি নির্বাচন/তুলুন।"); return; }
-    var st = $("scanStatus"); st.textContent = "🤖 স্ক্যান হচ্ছে…";
+  // AI fallback — only runs when offline OCR can't read the slip. Needs ANTHROPIC_API_KEY in Vercel.
+  function runAiScan(f) {
+    var st = $("scanStatus"); st.textContent = "🤖 AI দিয়ে চেষ্টা হচ্ছে…";
     var catNames = categories.map(function (c) { return c.name; });
-    fin.extractCost(f, catNames).then(function (data) {
-      st.textContent = "✅ ডেটা বসানো হয়েছে — যাচাই করে সংরক্ষণ করুন";
+    return fin.extractCost(f, catNames).then(function (data) {
       if (data.txn_date) $("enDate").value = data.txn_date;
       if (data.total) $("enAmount").value = data.total;
       var noteParts = [];
       if (data.vendor) noteParts.push(data.vendor);
       (data.items || []).forEach(function (it) { noteParts.push(it.description + " (৳" + it.amount + ")"); });
-      $("enNote").value = noteParts.join(", ");
-      // try to match category from first item
+      if (noteParts.length) $("enNote").value = noteParts.join(", ");
       var firstCat = (data.items && data.items[0] && data.items[0].category || "").toLowerCase();
       if (firstCat) {
         var match = categories.filter(function (c) { return !c.parent_id && c.kind === "cost" && c.name.toLowerCase().indexOf(firstCat) >= 0; })[0]
@@ -189,8 +186,11 @@
           if (match.parent_id) $("enSubcat").value = match.id;
         }
       }
-    }).catch(function (err) { st.textContent = "❌ " + (err.message || "স্ক্যান ব্যর্থ (Vercel এ ANTHROPIC_API_KEY দরকার)"); });
-  });
+      st.textContent = "✅ AI দিয়ে ডেটা বসানো হয়েছে — যাচাই করে সংরক্ষণ করুন";
+    }).catch(function (err) {
+      st.textContent = "❌ পড়া যায়নি — অনুগ্রহ করে হাতে লিখুন" + (err && err.message ? " (" + err.message + ")" : "");
+    });
+  }
 
   /* ---------- Offline OCR (Tesseract.js, no API key) ---------- */
   function loadScript(src) {
@@ -233,10 +233,18 @@
         var nums = (pool.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(function (n) { return n > 0; });
         total = nums.length ? Math.max.apply(null, nums) : 0;
       }
-      if (total) $("enAmount").value = total;
       $("enNote").value = text.replace(/\s+/g, " ").trim().slice(0, 160);
-      st.textContent = total ? "✅ টেক্সট পড়া হয়েছে — পরিমাণ ও তথ্য যাচাই করুন" : "⚠️ টেক্সট পড়া হয়েছে কিন্তু পরিমাণ পাওয়া যায়নি — হাতে লিখুন";
-    }).catch(function (err) { st.textContent = "❌ " + (err.message || "অফলাইন স্ক্যান ব্যর্থ"); });
+      if (total) {
+        $("enAmount").value = total;
+        st.textContent = "✅ টেক্সট পড়া হয়েছে — পরিমাণ ও তথ্য যাচাই করুন";
+      } else {
+        st.textContent = "⚠️ অফলাইনে পরিমাণ পাওয়া যায়নি — AI দিয়ে চেষ্টা করছি…";
+        runAiScan(f); // fall back to AI when offline OCR can't read the amount
+      }
+    }).catch(function () {
+      st.textContent = "⚠️ অফলাইন স্ক্যান ব্যর্থ — AI দিয়ে চেষ্টা করছি…";
+      runAiScan(f); // fall back to AI on OCR failure
+    });
   });
   function pad(n) { n = String(n); return n.length < 2 ? "0" + n : n; }
 
