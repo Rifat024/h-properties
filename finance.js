@@ -192,6 +192,54 @@
     }).catch(function (err) { st.textContent = "❌ " + (err.message || "স্ক্যান ব্যর্থ (Vercel এ ANTHROPIC_API_KEY দরকার)"); });
   });
 
+  /* ---------- Offline OCR (Tesseract.js, no API key) ---------- */
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      if (window.Tesseract) return resolve();
+      var s = document.createElement("script");
+      s.src = src; s.onload = resolve; s.onerror = function () { reject(new Error("লাইব্রেরি লোড ব্যর্থ")); };
+      document.head.appendChild(s);
+    });
+  }
+  function bnToEn(str) {
+    var map = { "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4", "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9" };
+    return String(str).replace(/[০-৯]/g, function (d) { return map[d]; });
+  }
+  $("ocrBtn").addEventListener("click", function () {
+    var f = scanFile.files[0];
+    if (!f) { alert("আগে একটি ছবি নির্বাচন/তুলুন।"); return; }
+    var st = $("scanStatus"); st.textContent = "📴 লাইব্রেরি লোড হচ্ছে…";
+    loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js").then(function () {
+      st.textContent = "🔍 টেক্সট পড়া হচ্ছে… (কিছুক্ষণ সময় লাগতে পারে)";
+      return window.Tesseract.recognize(f, "eng+ben", {
+        logger: function (m) { if (m.status === "recognizing text") st.textContent = "🔍 পড়া হচ্ছে… " + Math.round(m.progress * 100) + "%"; }
+      });
+    }).then(function (res) {
+      var text = (res && res.data && res.data.text) || "";
+      var norm = bnToEn(text).replace(/,/g, "");
+      // date dd/mm/yyyy or yyyy-mm-dd — detect first, then exclude from number pool
+      var d = norm.match(/(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/) || norm.match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
+      var pool = norm;
+      if (d) {
+        var iso = d[1].length === 4 ? (d[1] + "-" + pad(d[2]) + "-" + pad(d[3])) : (d[3] + "-" + pad(d[2]) + "-" + pad(d[1]));
+        if (!isNaN(new Date(iso).getTime())) $("enDate").value = iso;
+        pool = pool.replace(d[0], " "); // don't let the date's digits count as an amount
+      }
+      // prefer a number next to a "total" keyword; else the largest remaining number
+      var total = 0;
+      var tot = pool.match(/(?:grand\s*total|total|সর্বমোট|মোট)[^\d]{0,14}(\d+(?:\.\d+)?)/i);
+      if (tot) total = parseFloat(tot[1]);
+      if (!total) {
+        var nums = (pool.match(/\d+(?:\.\d+)?/g) || []).map(parseFloat).filter(function (n) { return n > 0; });
+        total = nums.length ? Math.max.apply(null, nums) : 0;
+      }
+      if (total) $("enAmount").value = total;
+      $("enNote").value = text.replace(/\s+/g, " ").trim().slice(0, 160);
+      st.textContent = total ? "✅ টেক্সট পড়া হয়েছে — পরিমাণ ও তথ্য যাচাই করুন" : "⚠️ টেক্সট পড়া হয়েছে কিন্তু পরিমাণ পাওয়া যায়নি — হাতে লিখুন";
+    }).catch(function (err) { st.textContent = "❌ " + (err.message || "অফলাইন স্ক্যান ব্যর্থ"); });
+  });
+  function pad(n) { n = String(n); return n.length < 2 ? "0" + n : n; }
+
   /* ---------- Save entry ---------- */
   var editingId = null;
   function resetEntry() {
