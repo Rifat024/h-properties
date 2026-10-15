@@ -254,6 +254,9 @@ h1,h2,h3{font-family:var(--display);color:var(--ink);line-height:1.2;font-weight
 .footer__brand{display:flex;align-items:center;gap:.8rem;color:#fff}
 .footer__muted{color:#7d8fa1;font-size:.9rem}
 .footer__copy{margin:0}
+.footer__credit{margin:0}
+.footer__credit a{color:#c9d6cc;font-weight:600}
+.footer__credit a:hover{color:var(--gold-2)}
 .footer__links{display:flex;gap:1.2rem}
 .footer__fb:hover,.footer__admin:hover{color:var(--gold-2)}
 .footer__admin{opacity:.7;font-size:.9rem}
