@@ -11,6 +11,20 @@
 # itself if it is not linked yet.
 set -euo pipefail
 
+# Every deploy ships the latest default branch: switch to it, pull, then re-run the updated script.
+if [ "${DEPLOY_SYNCED:-0}" != "1" ] && [[ " $* " != *" -h "* && " $* " != *" --help "* && " $* " != *" --allow-unmerged "* ]]; then
+  REPO_ROOT="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+  DEFAULT_BRANCH="$(git -C "$REPO_ROOT" ls-remote --symref origin HEAD | awk '/^ref:/ { sub("refs/heads/", "", $2); print $2 }')"
+  if [ -n "$(git -C "$REPO_ROOT" status --porcelain --untracked-files=no)" ]; then
+    printf '[deploy] %s has uncommitted changes. Commit or stash them before deploying.\n' "$REPO_ROOT" >&2
+    exit 1
+  fi
+  printf '[deploy] Switching to %s and pulling the latest...\n' "${DEFAULT_BRANCH:-main}"
+  git -C "$REPO_ROOT" switch --quiet "${DEFAULT_BRANCH:-main}"
+  git -C "$REPO_ROOT" pull --quiet --ff-only origin "${DEFAULT_BRANCH:-main}"
+  DEPLOY_SYNCED=1 exec bash "${BASH_SOURCE[0]}" "$@"
+fi
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WEB="$ROOT"
 VERCEL_SCOPE="rifat024s-projects"
